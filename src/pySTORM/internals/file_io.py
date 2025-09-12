@@ -3,6 +3,10 @@ import pandas as pd
 import tifffile as tiff
 import os
 
+def gather_im_stacks(folder_path: str) -> list[str]:
+
+    pass
+
 def load_image(path: str):
 
     with tiff.TiffFile(path) as tif:
