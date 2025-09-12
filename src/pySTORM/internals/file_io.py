@@ -5,7 +5,14 @@ import os
 
 def gather_im_stacks(folder_path: str) -> list[str]:
 
-    pass
+    img_formats = ('.tif', '.tiff', '.TIF', '.TIFF')
+    
+    im_files = [
+        os.path.join(folder_path, file) for file in folder_path
+        if file.endswith(img_formats)
+    ]
+
+    return im_files
 
 def load_image(path: str):
 
