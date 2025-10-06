@@ -327,7 +327,6 @@ def convert_to_photons(data: 'np.ndarray', adu: float,
 
     return data_photons
 
-
 ## MAIN FUNCTION ##
 #-------------------------------------------------#
 

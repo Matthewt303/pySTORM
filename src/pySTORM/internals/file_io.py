@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import tifffile as tiff
 import os
+from typing import Generator
 
 def gather_im_stacks(folder_path: str) -> list[str]:
 
@@ -21,13 +22,21 @@ def load_image(path: str):
     
     return memmap_stack.astype(np.float32)
 
+def load_stacks(paths: tuple[str]) -> Generator['np.ndarray', None, None]:
+
+    for path in paths:
+
+        stack = load_image(path)
+
+        yield stack
+
 def save_localisation_table(loc_data: list, out_folder: str,
                             denoised=None):
 
     localisation_data = np.vstack(loc_data).reshape(-1, 8)
 
     # Remove unrealistically large uncertainties.
-    localsiation_data = localisation_data[localisation_data[:, -1] < 500]
+    localisation_data = localisation_data[localisation_data[:, -1] < 500]
 
     headers = ['id',
                'frame',

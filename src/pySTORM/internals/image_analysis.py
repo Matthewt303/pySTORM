@@ -1,33 +1,31 @@
 import numpy as np
 from numba import jit, prange
 from numba.typed import List
-from skimage.feature import peak_local_max
+import cv2 as cv
 from skimage.filters import difference_of_gaussians
 import matplotlib.pyplot as plt
 
-def extract_local_maxima(image, threshold):
+def extract_local_maxima(img, threshold, neighborhood=8):
 
-    coordinates = peak_local_max(
-    image,
-    min_distance=2,          # Minimum number of pixels between peaks
-    threshold_abs=threshold,      # Minimum intensity to be considered a spot
-    num_peaks=np.inf,      # Maximum number of peaks to return
-    )
+    dilated = cv.dilate(img, np.ones((neighborhood, neighborhood)))
 
-    return coordinates.astype(np.int32)
+    local_max_mask = (img == dilated)
+
+    local_max_mask &= (img > threshold)
+
+    ys, xs = np.where(local_max_mask)
+    coords = np.array(list(zip(ys, xs))).reshape(-1, 2)
+
+    return coords.astype(np.int32)
 
 def dog_filter(image):
 
-    im = image.copy()
+    less_filt = cv.GaussianBlur(image, (11, 11), 1, borderType=cv.BORDER_REPLICATE)
+    more_filt = cv.GaussianBlur(image, (51, 51), 6, borderType=cv.BORDER_REPLICATE)
 
-    filt_im = difference_of_gaussians(im, 1, 6)
+    filt_im = less_filt - more_filt
 
     return filt_im
-
-@jit(nopython=True, nogil=True, cache=False)
-def convert_pix_to_um(data, pix_res: float):
-
-    return data * pix_res
 
 @jit(nopython=True, nogil=True, cache=False)
 def get_spot_edges(x: int, y: int, width: int):
@@ -91,7 +89,8 @@ def convert_pix_to_um(data, pix_res: float):
 
     return data * pix_res
 
-def get_spots(image_frame: 'np.ndarray', pix_res: float) -> list:
+def get_spots(image_frame: 'np.ndarray', pix_res: float,
+              threshold: float) -> list:
 
     """
     Carries out wavelet filter, otsu segmentation, and local maxima
@@ -110,26 +109,10 @@ def get_spots(image_frame: 'np.ndarray', pix_res: float) -> list:
 
     smoothed_im = dog_filter(image)
 
-    threshold = np.sqrt(np.mean(smoothed_im ** 2))
+    rms = np.sqrt(np.mean(smoothed_im ** 2))
 
-    local_maxima = extract_local_maxima(smoothed_im, 5.0 * threshold)
+    local_maxima = extract_local_maxima(smoothed_im, threshold * rms)
 
     spots, spot_coords = extract_spot_rois(image, local_maxima, pix_res)
     
     return spots, spot_coords
-
-def get_spots_denoised(denoised_im: 'np.ndarray', noisy_im: 'np.ndarray', pix_res: float) -> 'np.ndarray':
-
-    image = denoised_im.copy()
-    noisy_image = noisy_im.copy()
-
-    smoothed_im = dog_filter(noisy_image)
-
-    threshold = np.sqrt(np.mean(smoothed_im ** 2))
-
-    local_maxima = extract_local_maxima(smoothed_im, 2.0 * threshold)
-
-    spots, spot_coords = extract_spot_rois(image, local_maxima, pix_res)
-
-    return spots, spot_coords
-

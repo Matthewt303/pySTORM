@@ -30,7 +30,7 @@ def get_movies(movie_folder: str) -> tuple[str]:
     
     return tuple(im_stack_paths)
 
-def get_camera_params(pixel_size: float=None, adu: float=None,
+def get_camera_params(pixel_size: float=None, adu: float=None, offset: int=None,
                       gain: int=None) -> tuple[float]:
     
     """
@@ -41,6 +41,7 @@ def get_camera_params(pixel_size: float=None, adu: float=None,
     In:
     pixel_size - the pixel size in nm at the sample plane.
     adu - analog-digital conversion factor. 
+    offset - camera baseline gray value.
     gain - EM amplification.
     ----------------------------------------------------------
     Out:
@@ -54,21 +55,24 @@ def get_camera_params(pixel_size: float=None, adu: float=None,
     
     if (pixel_size is None
         or adu is None
+        or offset is None
         or gain is None
         ):
 
         raise ValueError("Missing one or more camera specification value.")
     
     if (not isinstance(pixel_size, float)
+        or not isinstance(offset, int)
         or not isinstance(adu, float)
         or not isinstance(gain, int)
         ):
 
         raise TypeError("One or more camera specs are not of the correct type." \
-        " Pixel size and adu must be floats while gain must be an integer.")
+        " Pixel size and adu must be floats while gain and offset must be an integer.")
     
     if (pixel_size <= 0
         or adu <= 0
+        or offset <= 0
         or gain <= 0
         ):
 
@@ -84,7 +88,7 @@ def get_camera_params(pixel_size: float=None, adu: float=None,
         warnings.warn("Pixel size is very large. Localization accuracy will likely be poor",
                       Warning)
     
-    specs = (pixel_size, adu, gain)
+    specs = (pixel_size, adu, offset, gain)
 
     return specs
 
