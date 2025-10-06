@@ -1,9 +1,7 @@
 import numpy as np
-from numba import jit, prange
+from numba import jit
 from numba.typed import List
 import cv2 as cv
-from skimage.filters import difference_of_gaussians
-import matplotlib.pyplot as plt
 
 def extract_local_maxima(img, threshold, neighborhood=8):
 
@@ -26,6 +24,11 @@ def dog_filter(image):
     filt_im = less_filt - more_filt
 
     return filt_im
+
+@jit(nopython=True, nogil=True, cache=False)
+def convert_pix_to_um(data, pix_res: float):
+
+    return data * pix_res
 
 @jit(nopython=True, nogil=True, cache=False)
 def get_spot_edges(x: int, y: int, width: int):
@@ -84,18 +87,11 @@ def extract_spot_rois(image, spot_centers, pix_res):
     
     return spots, spot_edges
 
-@jit(nopython=True, nogil=True, cache=False)
-def convert_pix_to_um(data, pix_res: float):
-
-    return data * pix_res
-
 def get_spots(image_frame: 'np.ndarray', pix_res: float,
               threshold: float) -> list:
 
     """
-    Carries out wavelet filter, otsu segmentation, and local maxima
-    identification for a single image frame to detect molecules. A 
-    10 px x 10 px ROI is then extracted for each molecule.
+    
 
     In: image
 

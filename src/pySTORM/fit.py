@@ -38,8 +38,23 @@ def check_threshold(threshold: float) -> None:
         warnings.warn("Threshold is very high. Many localisations will be missed.",
                       Warning)
 
-def localize(stack_folder_path: str, camera_specs: tuple,
+def localize(stack_folder_paths: tuple[str], camera_specs: tuple,
              threshold: float) -> 'np.ndarray':
+    
+    """
+    This function carries out single-molecule localization for
+    a given set of image stacks. 
+    ----------------------------------------------------------
+    In:
+    stack_folder_paths - file paths of image stacks
+    camera_specs - the pixel size, adu, offset, and gain of the camera
+    threshold - the minimum intensity in the filtered image for 
+    local maxima detection
+    ----------------------------------------------------------
+    Out:
+    A localization table as a np array.
+    ----------------------------------------------------------
+    """
 
     # Ensure only valid thresholds are input #
 
@@ -55,9 +70,13 @@ def localize(stack_folder_path: str, camera_specs: tuple,
 
     ##--------PROGRAM START--------##
 
-    stacks = load_stacks(stack_folder_path)
+    stacks = load_stacks(stack_folder_paths)
 
-    for stack in stacks:
+    for j, stack in enumerate(stacks):
+
+        print(
+            "Processing stack " + str(j) + " of " + str(len(stack_folder_paths))
+        )
 
         for frame in stack:
 

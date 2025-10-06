@@ -30,8 +30,7 @@ def load_stacks(paths: tuple[str]) -> Generator['np.ndarray', None, None]:
 
         yield stack
 
-def save_localisation_table(loc_data: list, out_folder: str,
-                            denoised=None):
+def save_localisation_table_csv(loc_data: list, out_folder: str):
 
     localisation_data = np.vstack(loc_data).reshape(-1, 8)
 
@@ -53,15 +52,7 @@ def save_localisation_table(loc_data: list, out_folder: str,
                              dtype=np.float32)
     
     df_filt = dataframe[dataframe['uncertainty [nm]'].notnull()]
-
-    if denoised is not None:
-
-        df_filt.to_csv(os.path.join(out_folder, 'dn_reconstruction_tstorm.csv'),
-                     sep=',',
-                     index=False)
     
-    else:
-    
-        df_filt.to_csv(os.path.join(out_folder, 'reconstruction_tstorm.csv'),
+    df_filt.to_csv(os.path.join(out_folder, 'reconstruction_tstorm.csv'),
                      sep=',',
                      index=False)
