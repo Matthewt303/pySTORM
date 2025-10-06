@@ -75,10 +75,10 @@ def localize(stack_folder_paths: tuple[str], camera_specs: tuple,
     for j, stack in enumerate(stacks):
 
         print(
-            "Processing stack " + str(j) + " of " + str(len(stack_folder_paths))
+            "Processing stack " + str(j + 1) + " of " + str(len(stack_folder_paths))
         )
 
-        for frame in stack:
+        for i, frame in enumerate(stack):
 
             image_spots, maxima_coords = get_spots(frame, pix_size, threshold)
 
@@ -99,10 +99,12 @@ def localize(stack_folder_paths: tuple[str], camera_specs: tuple,
             id += frame_locs.shape[0]
             frame_num += 1
 
-            if frame_num % 100 == 0:
+            if (i + 1) % 100 == 0:
 
                 print(
-                "Processed " + str(frame_num) + "/" + str(stack.shape[0]) + " frames"
+                "Processed " + str(i + 1) + "/" + str(stack.shape[0]) + " frames"
                 )
+
+            del frame_locs
     
     return np.vstack(localisations).reshape(-1, 8)
