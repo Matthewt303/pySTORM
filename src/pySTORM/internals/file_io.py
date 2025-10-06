@@ -9,8 +9,8 @@ def gather_im_stacks(folder_path: str) -> list[str]:
     img_formats = ('.tif', '.tiff', '.TIF', '.TIFF')
     
     im_files = [
-        os.path.join(folder_path, file) for file in folder_path
-        if file.endswith(img_formats)
+        os.path.join(folder_path, file) for file in os.listdir(folder_path)
+        if file.endswith('.tif')
     ]
 
     return im_files
@@ -44,7 +44,6 @@ def save_localisation_table_csv(loc_data: list, out_folder: str):
                'sigma [nm]',
                'intensity [photon]',
                'offset [photon]',
-               #'bkgstd [photon]',
                'uncertainty [nm]']
     
     dataframe = pd.DataFrame(data=localisation_data,

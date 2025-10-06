@@ -1,6 +1,6 @@
 import os
 import warnings
-from internals.file_io import gather_im_stacks
+from pySTORM.internals.file_io import gather_im_stacks
 
 def get_movies(movie_folder: str) -> tuple[str]:
 

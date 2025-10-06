@@ -1,8 +1,8 @@
 import numpy as np
 import warnings
-from internals.file_io import load_stacks
-from internals.image_analysis import get_spots
-from internals.single_mol_fitting import localise_frame
+from pySTORM.internals.file_io import load_stacks
+from pySTORM.internals.image_analysis import get_spots
+from pySTORM.internals.single_mol_fitting import localise_frame
 
 def check_threshold(threshold: float) -> None:
 
@@ -20,7 +20,7 @@ def check_threshold(threshold: float) -> None:
 
     """
 
-    if not isinstance(threshold, float) or not isinstance(threshold, int):
+    if not isinstance(threshold, float) and not isinstance(threshold, int):
 
         raise TypeError("Threshold must be float or integer.")
     
@@ -80,7 +80,7 @@ def localize(stack_folder_paths: tuple[str], camera_specs: tuple,
 
         for frame in stack:
 
-            image_spots, maxima_coords = get_spots(frame, pix_size)
+            image_spots, maxima_coords = get_spots(frame, pix_size, threshold)
 
             frame_locs = localise_frame(image_spots,
                                     maxima_coords,
@@ -104,9 +104,5 @@ def localize(stack_folder_paths: tuple[str], camera_specs: tuple,
                 print(
                 "Processed " + str(frame_num) + "/" + str(stack.shape[0]) + " frames"
                 )
-            
-            del localisations
-        
-        del stack
     
     return np.vstack(localisations).reshape(-1, 8)
