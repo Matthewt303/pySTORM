@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit, prange
 import math
-from internals.image_analysis import convert_pix_to_um
+from pySTORM.internals.image_analysis import convert_pix_to_um
 import matplotlib.pyplot as plt
 
 ## PARAMETER INITIALISATION ##
