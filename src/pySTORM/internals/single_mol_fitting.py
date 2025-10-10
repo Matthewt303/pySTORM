@@ -28,19 +28,15 @@ def estimate_bg(spot):
 
 
 @jit(nopython=True, nogil=True, cache=False)
-def estimate_intensity(spot, bg):
+def estimate_intensity(spot):
     return np.max(spot)
 
 
 @jit(nopython=True, nogil=True, cache=False)
 def initial_parameters(spot, size):
-    """
-    This function has been changed from the original.
-    """
-
     y, x = sum_and_center_of_mass(spot, size)
     bg = estimate_bg(spot)
-    photons = estimate_intensity(spot, bg)
+    photons = estimate_intensity(spot)
     photons_sane = np.maximum(1.0, photons)
     sy, sx = spot.shape[0] / 6, spot.shape[1] / 6
     return x, y, photons_sane, bg, sx, sy
