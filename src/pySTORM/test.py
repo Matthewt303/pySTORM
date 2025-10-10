@@ -18,6 +18,6 @@ def main():
     x = fit.localize(paths, specs, threshold=3.0)
     return x[0:5, :]
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 
-    main()
+#    main()
