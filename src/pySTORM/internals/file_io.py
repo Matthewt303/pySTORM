@@ -5,8 +5,6 @@ import os
 from typing import Generator
 
 def gather_im_stacks(folder_path: str) -> list[str]:
-
-    img_formats = ('.tif', '.tiff', '.TIF', '.TIFF')
     
     im_files = [
         os.path.join(folder_path, file) for file in os.listdir(folder_path)

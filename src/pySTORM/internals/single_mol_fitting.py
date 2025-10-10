@@ -2,7 +2,6 @@ import numpy as np
 from numba import jit, prange
 import math
 from pySTORM.internals.image_analysis import convert_pix_to_um
-import matplotlib.pyplot as plt
 
 ## PARAMETER INITIALISATION ##
 #-------------------------------------------------#
@@ -258,9 +257,9 @@ def calc_loc_prec(spot, theta_opt):
             dmodel_dt[3] = 1.0
 
             for k in range(n_params):
-                for l in range(k, n_params):
-                        fisher[k, l] += dmodel_dt[l] * dmodel_dt[k] / (model + 1e-9)
-                        fisher[l, k] = fisher[k, l]
+                for m in range(k, n_params):
+                        fisher[k,m] += dmodel_dt[m] * dmodel_dt[k] / (model + 1e-9)
+                        fisher[m, k] = fisher[k, m]
     
     crlb = get_crlb(fisher)
     return (np.sqrt(crlb[0]) + np.sqrt(crlb[1])) / 2
