@@ -3,7 +3,7 @@
 
 #name: pySTORM
 
-name: Debug: show git remote
+name: Debug
   run: |
     git remote -v || true
     echo "GIT_URL_FROM_ORIGIN:"
