@@ -104,3 +104,4 @@ def save_localisation_table_csv(loc_data: list['np.ndarray'],
     df_filt.to_csv(os.path.join(out_folder, 'reconstruction.csv'),
                      sep=',',
                      index=False)
+    
