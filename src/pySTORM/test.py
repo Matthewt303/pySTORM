@@ -3,19 +3,17 @@ import pySTORM.fit as fit
 
 
 def main():
-    path = "C:/users/matth/Downloads/test_module"
+    input_path = "/path/to/smlm/data"
+    output_path = "/path/where/things/are/saved"
 
-    paths = io.get_movies(path)
-    print(paths)
+    paths = io.get_movies(input_path)
 
     specs = io.get_camera_params(pixel_size=97.5, adu=0.59, offset=100, gain=100)
 
-    print(specs)
+    locs = fit.localize(paths, specs, threshold=3.0)
 
-    x = fit.localize(paths, specs, threshold=3.0)
-    return x[0:5, :]
+    io.save_loc_table(locs, output_path, format="csv")
 
 
-# if __name__ == "__main__":
-
-#    main()
+if __name__ == "__main__":
+    main()
