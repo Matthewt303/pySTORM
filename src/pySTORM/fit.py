@@ -51,7 +51,8 @@ def localize(
     local maxima detection
     ----------------------------------------------------------
     Out:
-    A localization table as a np array.
+    A list of N x 8 numpy arrays where N denotes the number of localizations detected
+    in a frame.
     ----------------------------------------------------------
     """
 

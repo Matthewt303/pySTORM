@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import tifffile as tiff
+import h5py
 import os
 from typing import Generator
 
@@ -106,7 +107,7 @@ def save_localisation_table_csv(loc_data: list["np.ndarray"], out_folder: str) -
 def save_localisation_table_hdf5(loc_data: list["np.ndarray"], out_folder: str) -> None:
     """
     Aggregates localisations, filters for unrealistic uncertainties,
-    converts to pd dataframe, and saves the localisation table in a
+    converts to hd5f dataset, and saves the localisation table in a
     user-specified output folder.
     ---------------------------------------------------------------
     In:
@@ -116,10 +117,11 @@ def save_localisation_table_hdf5(loc_data: list["np.ndarray"], out_folder: str) 
     out_folder - where the localisation data will be saved.
     ---------------------------------------------------------------
     Out:
-    None. .csv file is saved, titled 'reconstruction.csv'
+    None. .hdf5 file is saved, titled 'reconstruction.hdf5'
     """
 
     localisation_data = np.vstack(loc_data).reshape(-1, 8)
+    localisation_data = localisation_data[~np.isnan(localisation_data[:, -1])]
 
     # Remove unrealistically large uncertainties.
     localisation_data = localisation_data[localisation_data[:, -1] < 500]
@@ -135,8 +137,6 @@ def save_localisation_table_hdf5(loc_data: list["np.ndarray"], out_folder: str) 
         "uncertainty [nm]",
     ]
 
-    dataframe = pd.DataFrame(data=localisation_data, columns=headers, dtype=np.float32)
-
-    df_filt = dataframe[dataframe["uncertainty [nm]"].notnull()]
-
-    df_filt.to_csv(os.path.join(out_folder, "reconstruction.csv"), sep=",", index=False)
+    with h5py.File(os.path.join(out_folder, "reconstruction.hdf5"), "w") as f:
+        dset = f.create_dataset("loc_table", data=localisation_data, dtype=np.float32)
+        dset.attrs["columns"] = headers

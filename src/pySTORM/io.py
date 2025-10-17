@@ -1,6 +1,11 @@
+import numpy as np
 import os
 import warnings
 from pySTORM.internals.file_io import gather_im_stacks
+from pySTORM.internals.file_io import (
+    save_localisation_table_csv,
+    save_localisation_table_hdf5,
+)
 
 
 def get_movies(movie_folder: str) -> tuple[str]:
@@ -83,3 +88,52 @@ def get_camera_params(
     specs = (pixel_size, adu, offset, gain)
 
     return specs
+
+
+def save_loc_table(
+    loc_data: list["np.ndarray"], output_folder: str, format: str
+) -> None:
+    """
+    This function saves the localization data either as a .csv file or a
+    .hdf5 file, depending on user specifications. The file is used in the
+    user-specified output folder.
+    ----------------------------------------------------------
+    In:
+    loc_data - a list of N x 8 numpy arrays where N is the number of localizations
+    detected in a frame.
+
+    output_folder - user-specified output folder.
+
+    format - either 'csv' or 'hdf5'
+    ----------------------------------------------------------
+    Out:
+    None but a file is saved in the output folder.
+    ----------------------------------------------------------
+
+    """
+
+    ## INPUT CHECKS ##
+    # --------------------------#
+
+    if not isinstance(output_folder, str):
+        raise TypeError("Output folder must be a string")
+
+    if not os.path.isdir(output_folder):
+        raise OSError("Directory not found")
+
+    if format not in ("csv", "hdf5"):
+        warnings.warn(
+            "Invalid file format. Defaulting to .csv. Use either csv orhdf5 next time",
+            Warning,
+        )
+
+        format = "csv"
+
+    ## SAVE FILES ##
+    # --------------------------#
+
+    if format == "csv":
+        save_localisation_table_csv(loc_data, output_folder)
+
+    else:
+        save_localisation_table_hdf5(loc_data, output_folder)
