@@ -101,3 +101,42 @@ def save_localisation_table_csv(loc_data: list["np.ndarray"], out_folder: str) -
     df_filt = dataframe[dataframe["uncertainty [nm]"].notnull()]
 
     df_filt.to_csv(os.path.join(out_folder, "reconstruction.csv"), sep=",", index=False)
+
+
+def save_localisation_table_hdf5(loc_data: list["np.ndarray"], out_folder: str) -> None:
+    """
+    Aggregates localisations, filters for unrealistic uncertainties,
+    converts to pd dataframe, and saves the localisation table in a
+    user-specified output folder.
+    ---------------------------------------------------------------
+    In:
+    loc_data - list of np arrays where each array is the localisation
+    data for one frame.
+
+    out_folder - where the localisation data will be saved.
+    ---------------------------------------------------------------
+    Out:
+    None. .csv file is saved, titled 'reconstruction.csv'
+    """
+
+    localisation_data = np.vstack(loc_data).reshape(-1, 8)
+
+    # Remove unrealistically large uncertainties.
+    localisation_data = localisation_data[localisation_data[:, -1] < 500]
+
+    headers = [
+        "id",
+        "frame",
+        "x [nm]",
+        "y [nm]",
+        "sigma [nm]",
+        "intensity [photon]",
+        "offset [photon]",
+        "uncertainty [nm]",
+    ]
+
+    dataframe = pd.DataFrame(data=localisation_data, columns=headers, dtype=np.float32)
+
+    df_filt = dataframe[dataframe["uncertainty [nm]"].notnull()]
+
+    df_filt.to_csv(os.path.join(out_folder, "reconstruction.csv"), sep=",", index=False)

@@ -39,7 +39,7 @@ def check_threshold(threshold: float) -> None:
 
 def localize(
     stack_folder_paths: tuple[str], camera_specs: tuple, threshold: float
-) -> "np.ndarray":
+) -> list["np.ndarray"]:
     """
     This function carries out single-molecule localization for
     a given set of image stacks.
@@ -101,4 +101,4 @@ def localize(
 
             del frame_locs
 
-    return np.vstack(localisations).reshape(-1, 8)
+    return localisations
