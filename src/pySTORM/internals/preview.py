@@ -47,7 +47,8 @@ def call(parent):
         pass
 
     else:
-        sys.exit("Program terminating. Feel free to change the threshold!")
+        messagebox.showinfo("", "Exiting program. Feel free to change the threshold!")
+        sys.exit(0)
         parent.destroy()
 
 

@@ -38,12 +38,15 @@ It is recommended to use the module as a script. An example is shown here:
 ```python
 import pySTORM.io as io
 import pySTORM.fit as fit
+import pySTORM.prev as preview
 
 def main():
     input_path = "/path/to/smlm/data"
     output_path = "/path/where/things/are/saved"
 
     paths = io.get_movies(input_path)
+
+    prev.preview(paths, threshold=3.0) ## <- optional
 
     specs = io.get_camera_params(pixel_size=100, adu=13.7, offset=100, gain=100)
 
@@ -55,6 +58,7 @@ if __name__ == "__main__":
 
     main()
 ```
+You can preview the single-molecule detection with ```prev.preview```. A dialogue box should pop up where clicking 'yes' allows the program to continue while clicking 'no' will exit the program.
 
 ## As a command-line script
 

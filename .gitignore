@@ -30,3 +30,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Personal scripts for testing and debugging
+src/pySTORM/test.py
+test.py
