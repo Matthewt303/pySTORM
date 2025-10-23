@@ -1,12 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import messagebox
+import sys
 from pySTORM.internals.image_analysis import dog_filter, extract_local_maxima
 
 
 def filt_fit(image: "np.ndarray", threshold: float) -> "np.ndarray":
     filt_im = dog_filter(image)
 
-    local_maxima = extract_local_maxima(filt_im)
+    rms = np.sqrt(np.mean(filt_im**2))
+
+    local_maxima = extract_local_maxima(filt_im, rms * threshold)
 
     return local_maxima
 
@@ -31,3 +36,23 @@ def show_image(image: "np.ndarray", maxima: "np.ndarray") -> None:
     ax.tick_params(axis="both", width=0)
 
     plt.show()
+
+
+def call(parent):
+    res = messagebox.askquestion("Continue Program", "Do you wish to continue?")
+
+    if res == "yes":
+        messagebox.showinfo("", "Returning to program!")
+        parent.destroy()
+        pass
+
+    else:
+        sys.exit("Program terminating. Feel free to change the threshold!")
+        parent.destroy()
+
+
+def message():
+    root = tk.Tk()
+    root.withdraw()
+
+    call(root)

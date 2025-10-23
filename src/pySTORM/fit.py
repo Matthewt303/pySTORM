@@ -63,6 +63,7 @@ def localize(
     ##--------INITIALIZATION--------##
 
     pix_size, adu, offset, gain = camera_specs
+    pix_size_um = pix_size * 0.001
 
     frame_num, id = 1, 1
 
@@ -81,7 +82,7 @@ def localize(
             frame_locs = localise_frame(
                 image_spots,
                 maxima_coords,
-                pix_res=pix_size,
+                pix_res=pix_size_um,
                 frame_num=frame_num,
                 id_num=id,
                 adu=adu,

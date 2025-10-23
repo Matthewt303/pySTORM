@@ -101,7 +101,7 @@ def get_spots(image_frame: "np.ndarray", pix_res: float, threshold: float) -> li
 
     # image = np.array(image_frame.copy())
 
-    image = image_frame.copy()
+    image = image_frame.view()
 
     smoothed_im = dog_filter(image)
 
