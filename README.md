@@ -75,6 +75,8 @@ Apart from file paths, Users must supply several parameters:
 - threshold. Modulates intensity threshold for single-molecule detection. Set to higher for more stringent thresholds, lower vice versa. 
 - format. File format for localization table. Either "csv" or "hdf5".
 
+The pixel size can be calculated from the imaging path. The adu and offset should be provided by the camera manufacturer's spec sheets and the gain is set during an experiment. For the file format, csvs are easier to read but use up much more memory than hdf5. For hdf5, specialised modules, such as ```h5py``` will be required.
+
 ## Motivation
 
 Single-molecule localization microscopy has enabled us to probe *in situ* biological systems at unprecedented levels of detail. A critical step is the sub-pixel localization of fluorophores. While an enormous number of software are already available for this task, very few are easily accessible, resulting in a handful of 'community favourites', namely ThunderSTORM, SMAP, and Picasso [1, 2, 3]. Out of these, only ThunderSTORM and Picasso are truly open-source. Notably, despite the recent populartity of Python for scientific computing, SMLM features very few software packages that use Python (outside of deep learning).  
