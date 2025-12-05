@@ -6,7 +6,7 @@ pySTORM is a user-friendly, lightweight, and minimalist library for single-molec
 
 ## Prerequisites
 
-- Python 3.11
+- Python >=3.11
 - Folder containing .tif files of raw SMLM data
 - Ideally a python virtual environment. See [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) for a guide if you are using conda or [here](https://virtualenv.pypa.io/en/latest/user_guide.html) for a guide if you are usng virtualenv.
 
@@ -31,7 +31,7 @@ For Windows powershell, use ```python``` instead of ```python3```.
 
 ## Usage
 
-### As a script
+### As an imported module
 
 It is recommended to use the module as a script. An example is shown here:
 
@@ -68,7 +68,7 @@ You can preview the single-molecule detection with ```prev.preview```. A dialogu
 
 Apart from file paths, Users must supply several parameters:
 
-- pixel_size, the length of a pixel at the sample plane.
+- pixel_size, the length of a pixel at the sample plane. Must be in nanometers.
 - adu, analog-digital conversion rate.
 - offset, camera baseline graycount.
 - gain, EMCCD gain. Set to 1 if not using an EMCCD.

@@ -77,7 +77,7 @@ def localize(
         print("Processing stack " + str(j + 1) + " of " + str(len(stack_folder_paths)))
 
         for i, frame in enumerate(stack):
-            image_spots, maxima_coords = get_spots(frame, pix_size, threshold)
+            image_spots, maxima_coords = get_spots(frame, pix_size_um, threshold)
 
             frame_locs = localise_frame(
                 image_spots,
