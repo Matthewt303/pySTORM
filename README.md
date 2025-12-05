@@ -6,7 +6,7 @@ pySTORM is a user-friendly, lightweight, and minimalist library for single-molec
 
 ## Prerequisites
 
-- Python >=3.11
+- Python >=3.11 and <3.14
 - Folder containing .tif files of raw SMLM data
 - Ideally a python virtual environment. See [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) for a guide if you are using conda or [here](https://virtualenv.pypa.io/en/latest/user_guide.html) for a guide if you are usng virtualenv.
 
