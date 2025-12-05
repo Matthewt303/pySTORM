@@ -123,7 +123,7 @@ def save_loc_table(
 
     if format not in ("csv", "hdf5"):
         warnings.warn(
-            "Invalid file format. Defaulting to .csv. Use either csv orhdf5 next time",
+            "Invalid file format. Defaulting to .csv. Use either csv or hdf5 next time",
             Warning,
         )
 
