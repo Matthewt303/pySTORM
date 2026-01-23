@@ -5,7 +5,9 @@ from pySTORM.internals.file_io import gather_im_stacks
 from pySTORM.internals.file_io import (
     save_localisation_table_csv,
     save_localisation_table_hdf5,
+    save_super_res_image,
 )
+from pySTORM.internals.image_analysis import bin_locs
 
 
 def get_movies(movie_folder: str) -> tuple[str]:
@@ -137,3 +139,43 @@ def save_loc_table(
 
     else:
         save_localisation_table_hdf5(loc_data, output_folder)
+
+
+def save_image(loc_data: list["np.ndarray"], mag: float, out_folder: str) -> None:
+    """
+    This function saves a super-resolution image using a user-specified
+    magnification.
+    ----------------------------------------------------------
+    In:
+    loc_data - a list of N x 8 numpy arrays where N is the number of localizations
+    detected in a frame.
+    mag - magnification, value below 1 that determines the scaling of the
+    image
+    out_folder - folder where the super-resolution image will be saved
+    """
+    if not isinstance(mag, float) and not isinstance(mag, int):
+        raise TypeError("Magnification must be float or integer.")
+
+    if mag <= 0:
+        raise ValueError("Magnification cannot be zero or less")
+
+    elif mag > 1 and mag < 2.1:
+        warnings.warn(
+            "The magnification is quite large, so you are artifically expanding the"
+            "structure. The structure is likely to look sparse. Consider using a"
+            "lower magnification (< 1) next time.",
+            Warning,
+        )
+
+    elif mag > 2.1:
+        warnings.warn(
+            "Magnification is too large. Defaulting to 0.2",
+            Warning,
+        )
+        mag = 0.2
+
+    localisation_data = np.vstack(loc_data).reshape(-1, 8)
+
+    super_res_image = bin_locs(localisation_data, mag)
+
+    save_super_res_image(super_res_image, out_folder)

@@ -112,3 +112,58 @@ def get_spots(image_frame: "np.ndarray", pix_res: float, threshold: float) -> li
     spots, spot_coords = extract_spot_rois(image, local_maxima, pix_res)
 
     return spots, spot_coords
+
+
+def bin_image(locs: "np.ndarray", size: int) -> "np.ndarray":
+    """
+    Bins localisation data into an image
+    ---------------------------------------------------------------
+    In:
+    ---------------------------------------------------------------
+    locs - xy localisation data
+    size - Maximum dimensions (in pixels) of the image, determined by max xy position
+    ---------------------------------------------------------------
+    Output:
+    image - super-resolution image
+    """
+
+    image = np.zeros((size, size), dtype=np.float32)
+
+    for x, y in locs:
+        im_x, im_y = np.int32(x), np.int32(y)
+
+        if 0 <= im_x < size and 0 <= im_y < size:
+            image[im_y, im_x] += 1
+
+    return image
+
+
+def bin_locs(locs: "np.ndarray", mag: float) -> "np.ndarray":
+    """
+    Summary:
+    Converts xy localisation data into an image with a user-specified
+    scaling factor
+    ---------------------------------------------------------------
+    In:
+    locs - xy localisation data
+    size - Maximum dimensions (in pixels) of the image, determined by max xy position
+    mag - scaling of image. E.g. for locs in nm, mag = 0.1 = 0.1 pix/nm = 10 nm / pix
+    ---------------------------------------------------------------
+    Out:
+    image - super-resolution image as a 2D array with dimensions of size x size.
+
+    """
+
+    xy_locs = mag * locs[:, 2:4].reshape(-1, 2)
+
+    x_locs, y_locs = xy_locs[:, 0], xy_locs[:, 1]
+
+    size = np.int64(np.ceil(np.max(xy_locs)))
+
+    locs_to_keep = (x_locs >= 0) & (x_locs < size) & (y_locs >= 0) & (y_locs < size)
+
+    new_locs = xy_locs[locs_to_keep]
+
+    image = bin_image(new_locs, size)
+
+    return image

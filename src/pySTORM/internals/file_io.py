@@ -140,3 +140,17 @@ def save_localisation_table_hdf5(loc_data: list["np.ndarray"], out_folder: str) 
     with h5py.File(os.path.join(out_folder, "reconstruction.hdf5"), "w") as f:
         dset = f.create_dataset("loc_table", data=localisation_data, dtype=np.float32)
         dset.attrs["columns"] = headers
+
+
+def save_super_res_image(image: "np.ndarray", out_folder: str) -> None:
+    """
+    Summary:
+    Saves a super-resolution image as a .tif file.
+    ---------------------------------------------------------------
+    In:
+    image - super-resolution image as a 2D array
+    out_folder - where the image will be saved
+    ---------------------------------------------------------------
+    """
+
+    tiff.imwrite(os.path.join(out_folder, "super_res_image.tif"), image)

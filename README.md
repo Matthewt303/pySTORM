@@ -54,11 +54,13 @@ def main():
 
     io.save_loc_table(locs, output_path, format="csv")
 
+    io.save_image(locs, mag=0.1, out_folder=output_path) ## <- optional
+
 if __name__ == "__main__":
 
     main()
 ```
-You can preview the single-molecule detection with ```prev.preview```. A dialogue box should pop up where clicking 'yes' allows the program to continue while clicking 'no' will exit the program.
+You can preview the single-molecule detection with ```prev.preview```. A dialogue box should pop up where clicking 'yes' allows the program to continue while clicking 'no' will exit the program. There is also the option to save a super-resolution image as a .tif file. 
 
 ## As a command-line script
 
@@ -74,8 +76,9 @@ Apart from file paths, Users must supply several parameters:
 - gain, EMCCD gain. Set to 1 if not using an EMCCD.
 - threshold. Modulates intensity threshold for single-molecule detection. Set to higher for more stringent thresholds, lower vice versa. 
 - format. File format for localization table. Either "csv" or "hdf5".
+- mag. The magnification with which to bin the localisation data into an image.
 
-The pixel size can be calculated from the imaging path. The adu and offset should be provided by the camera manufacturer's spec sheets and the gain is set during an experiment. For the file format, csvs are easier to read but use up much more memory than hdf5. For hdf5, specialised modules, such as ```h5py``` will be required.
+The pixel size can be calculated from the imaging path. The adu and offset should be provided by the camera manufacturer's spec sheets and the gain is set during an experiment. For the file format, csvs are easier to read but use up much more memory than hdf5. For hdf5, specialised modules, such as ```h5py``` will be required. For the magnification, values between 0.1 and 0.2 are recommended.
 
 ## Motivation
 
